@@ -109,8 +109,11 @@ def logout():
     hardPause(5)
 
 
-#get the state of things into a known state
+#Call the RESTful thing first to set the state of things into a known state
 get_code(get_code_url)
+
+#Now begin real logic
+
 login()
 isOk = writeEmail()
 if isOk:
