@@ -1,0 +1,88 @@
+import time
+import json
+person = "<username goes here>"
+email = "<gmail address goes here>"
+reset_url  = "http://localhost:7070/reset/"    
+get_code_url = "http://localhost:7070/code/" 
+
+def clickSomething(image):
+    wait(image)
+    doubleClick(image)
+    print("*** clicking on {0}".format(image))
+
+def writeSomething(image,text):
+    wait(image) 
+    type(image,text)
+
+def trickyEraseAndWrite(image,text):
+    wait(image)
+    click(image)
+    for i in range(60): 
+        type(Key.DELETE)
+    type(text)
+    print("*** erasing field at{0} ".format(image))
+        
+def hardPause(seconds):
+    print("*** hard pause for {0} seconds".format(seconds))
+    time.sleep(seconds)
+
+def get_code(count):
+    cmd = 'curl -s {0}'.format(get_code_url)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    result = "not set yet"
+    for line in p.stdout.readlines():
+        obj = json.loads(line)
+        result = obj["content"]
+    print("I will return {0}".format(result))
+    return result
+
+
+                                                                    
+# + ------------------------------------------------------------------- + 
+# + --- LOGIN PAGE ---------------------------------------------------- +
+clickSomething("1505746107552.png") # 'login' button
+writeSomething("1505746465229.png", person) # input field
+writeSomething("1505746601095.png", "password$1") # password
+clickSomething("1505746645060.png") # 'next' button
+# + --- GIVE EMAIL TO GET CODE  ---------------------------------------- +
+hardPause(8) # Wait some - the Portals site can be slow
+
+# Can not use normal text("a",Key.CNTRL) in this textfield
+# But give email address here to start the registration process
+trickyEraseAndWrite("1505753437116.png", email) 
+hardPause(2) # wait for async thing to make 'next' available
+clickSomething("1505753858605.png") # 'next' button
+# wait for the activation email to get to Gmail from Regence
+hardPause(30) # 
+# + --- GO TO RESTful endpoint to use GMAIL API to get ACTIVATION CODE-- +
+# wait up to 3 minutes - keep trying until OK 
+stop = 6
+loop = 0
+activation_code = "not set yet"
+keep_looping = True
+while loop < stop and keep_looping  == True:  
+    activation_code = get_code(get_code_url)
+    if activation_code == "NONE_FOUND":
+        print("hardPausing... on loop {0}".format(loop))
+        loop += 1
+        hardPause(30)
+    else: 
+        keep_looping = False
+        loop = stop
+print("*** The activation code is {0}".format(activation_code)) 
+writeSomething("1505757419061.png", activation_code ) # input the activation_code
+hardPause(5) # wait for page transition and click 'next' or 'I agree'
+clickSomething("1505777058062.png")
+hardPause(5)# # wait for page transition and click 'next' or 'I agree'
+clickSomething("1505777117789.png")
+hardPause(5)# wait for page transition and click 'next' or 'I agree'
+clickSomething("1505777146796.png")
+hardPause(5)# wait for page transition and click 'next' or 'I agree'
+clickSomething("1505777182675.png")
+hardPause(5) # click 'sign out'
+clickSomething("1505777202937.png")
+hardPause(5) # wait for sign out async model and click ok 
+print("THE END")
+
+
+
