@@ -1,8 +1,8 @@
 import subprocess
 import time
 import json
-person = "TESTBLUORCFSTEST77"
-email = "finch.wren.swift@gmail.com"
+person = "<user name here>"
+email = "<email here>"
 reset_url  = "http://localhost:7070/reset/"    
 get_code_url = "http://localhost:7070/code/" 
 
