@@ -12,3 +12,6 @@ I used<br>
 <li>sikulixapi.jar</li>
 </ul>
 Run the setup jar and that will launch a wizard and walk you through some choices.
+
+<hr>
+Take script from SikuliScript.logic and put that ( or something like it ) into your Sikuli IDE
